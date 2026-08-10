@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบฟอร์มตรวจเช็กมาตรฐาน 5ส (5S Checklist)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f6f9;
+    --card:#ffffff;
+    --ink:#1e293b;
+    --sub:#64748b;
+    --border:#e2e8f0;
+    --brand:#0f766e;
+    --brand-light:#ccfbf1;
+    --gray:#64748b;
+    --gray-bg:#f1f5f9;
+    --amber:#d97706;
+    --amber-bg:#fef3c7;
+    --green:#059669;
+    --green-bg:#d1fae5;
+    --shadow: 0 1px 2px rgba(15,23,42,.04), 0 4px 12px rgba(15,23,42,.05);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Noto Sans Thai','Sarabun','TH Sarabun New',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    padding-bottom:60px;
+  }
+  .container{max-width:920px;margin:0 auto;padding:24px 16px 8px;}
+
+  header.top{
+    background:linear-gradient(135deg,#0f766e 0%,#134e4a 100%);
+    color:#fff;
+    border-radius:16px;
+    padding:28px 28px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  header.top h1{margin:0 0 4px;font-size:22px;font-weight:800;letter-spacing:.2px;}
+  header.top p{margin:0;font-size:13.5px;opacity:.85;}
+  .badge5s{display:inline-flex;gap:6px;margin-top:14px;flex-wrap:wrap;}
+  .badge5s span{
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25);
+    padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:18px 18px;
+    margin-bottom:16px;
+  }
+
+  /* summary */
+  .summary-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .summary-top h2{font-size:15px;margin:0;color:var(--ink);}
+  .percent{font-size:26px;font-weight:800;color:var(--brand);}
+  .progress-track{height:12px;border-radius:999px;background:var(--gray-bg);overflow:hidden;display:flex;margin-bottom:14px;}
+  .progress-seg{height:100%;transition:width .3s ease;}
+  .seg-done{background:var(--green);}
+  .seg-prog{background:var(--amber);}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;}
+  .stat{
+    border-radius:10px;padding:10px 12px;font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .stat .n{font-size:18px;font-weight:800;}
+  .stat.total{background:#eef2ff;color:#3730a3;}
+  .stat.none{background:var(--gray-bg);color:var(--gray);}
+  .stat.prog{background:var(--amber-bg);color:var(--amber);}
+  .stat.done{background:var(--green-bg);color:var(--green);}
+
+  /* toolbar */
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;}
+  .toolbar input[type="search"]{
+    flex:1;min-width:180px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);
+    font-family:inherit;font-size:14px;background:#fff;
+  }
+  .filter-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btns button{
+    border:1px solid var(--border);background:#fff;color:var(--sub);
+    padding:8px 13px;border-radius:999px;font-size:12.5px;font-weight:600;
+    cursor:pointer;transition:.15s;font-family:inherit;
+  }
+  .filter-btns button.active{background:var(--brand);color:#fff;border-color:var(--brand);}
+  .toolbar .action-btns{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;}
+  .btn{
+    border:none;padding:9px 14px;border-radius:10px;font-size:13px;font-weight:700;
+    cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;
+    transition:.15s;
+  }
+  .btn-outline{background:#fff;border:1px solid var(--border);color:var(--ink);}
+  .btn-outline:hover{background:var(--gray-bg);}
+  .btn-brand{background:var(--brand);color:#fff;}
+  .btn-brand:hover{background:#0d5f58;}
+  input[type="file"]{display:none;}
+
+  /* sections */
+  details.section{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden;
+  }
+  details.section[open] summary{border-bottom:1px solid var(--border);}
+  summary.sec-head{
+    list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:12px;
+    font-weight:700;font-size:14.5px;
+  }
+  summary.sec-head::-webkit-details-marker{display:none;}
+  .sec-num{
+    background:var(--brand);color:#fff;min-width:30px;height:30px;border-radius:9px;
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;
+  }
+  .sec-title{flex:1;}
+  .sec-badge{
+    font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;
+  }
+  .sec-link{
+    font-size:12px;color:var(--brand);text-decoration:none;font-weight:600;white-space:nowrap;
+    border:1px solid var(--brand-light);padding:5px 10px;border-radius:8px;
+  }
+  .sec-link:hover{background:var(--brand-light);}
+  .chevron{transition:transform .2s;color:var(--sub);flex-shrink:0;}
+  details[open] .chevron{transform:rotate(90deg);}
+
+  .sec-body{padding:6px 18px 14px;}
+  .item-row{
+    border-top:1px solid var(--border);padding:13px 0;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;
+  }
+  .item-row:first-child{border-top:none;}
+  .item-text{flex:1;min-width:220px;font-size:14px;padding-top:6px;}
+  .item-idx{color:var(--sub);font-weight:700;margin-right:4px;}
+  .status-group{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;}
+  .status-btn{
+    border:1.5px solid var(--border);background:#fff;padding:7px 12px;border-radius:9px;
+    font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--sub);
+    transition:.15s;white-space:nowrap;
+  }
+  .status-btn[data-s="none"].active{background:var(--gray-bg);color:var(--gray);border-color:var(--gray);}
+  .status-btn[data-s="progress"].active{background:var(--amber-bg);color:var(--amber);border-color:var(--amber);}
+  .status-btn[data-s="done"].active{background:var(--green-bg);color:var(--green);border-color:var(--green);}
+  .note-input{
+    width:100%;margin-top:8px;padding:7px 10px;border:1px dashed var(--border);border-radius:8px;
+    font-family:inherit;font-size:12.5px;background:#fbfcfe;
+  }
+  .item-row.hidden{display:none;}
+  details.section.hidden{display:none;}
+
+  footer.note{text-align:center;color:var(--sub);font-size:12px;margin-top:24px;}
+
+  @media print{
+    body{background:#fff;}
+    .toolbar,.btn,header.top .badge5s{}
+    .toolbar,.summary-top .percent,.progress-track,.stat-row,.action-btns{display:none !important;}
+    .toolbar{display:none !important;}
+    details.section{break-inside:avoid;border:1px solid #ccc;box-shadow:none;}
+    details.section{display:block !important;}
+    details.section .sec-body{display:block !important;}
+    summary.sec-head{cursor:default;}
+    .status-btn{border:1px solid #999;}
+    .item-row.hidden{display:flex !important;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="top">
+    <h1>แบบฟอร์มตรวจเช็กมาตรฐาน 5ส (5S Checklist)</h1>
+    <p>สะสาง · สะดวก · สะอาด · สุขลักษณะ · สร้างนิสัย — บันทึกสถานะการดำเนินงานตามรายการมาตรฐานกลางของหน่วยงาน</p>
+    <div class="badge5s">
+      <span>18 หมวด</span>
+      <span id="totalItemsBadge">0 รายการ</span>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="summary-top">
+      <h2>ความคืบหน้าโดยรวม</h2>
+      <div class="percent" id="percentDone">0%</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-seg seg-done" id="segDone" style="width:0%"></div>
+      <div class="progress-seg seg-prog" id="segProg" style="width:0%"></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat total"><span>ทั้งหมด</span><span class="n" id="cntTotal">0</span></div>
+      <div class="stat none"><span>ยังไม่ดำเนินการ</span><span class="n" id="cntNone">0</span></div>
+      <div class="stat prog"><span>กำลังดำเนินการ</span><span class="n" id="cntProg">0</span></div>
+      <div class="stat done"><span>ดำเนินการเรียบร้อย</span><span class="n" id="cntDone">0</span></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input type="search" id="searchBox" placeholder="ค้นหารายการตรวจเช็ก...">
+    <div class="filter-btns" id="filterBtns">
+      <button data-f="all" class="active">ทั้งหมด</button>
+      <button data-f="none">ยังไม่ดำเนินการ</button>
+      <button data-f="progress">กำลังดำเนินการ</button>
+      <button data-f="done">ดำเนินการเรียบร้อย</button>
+    </div>
+    <div class="action-btns">
+      <button class="btn btn-outline" id="btnExpandAll">ขยายทั้งหมด</button>
+      <button class="btn btn-outline" id="btnCollapseAll">ย่อทั้งหมด</button>
+      <button class="btn btn-outline" id="btnExport">ออกรายงานสรุป (HTML)</button>
+      <label class="btn btn-outline" for="importFile" style="margin:0;">โหลดรายงานเดิม (Import)</label>
+      <input type="file" id="importFile" accept=".html,.htm,.json,application/json,text/html">
+      <button class="btn btn-brand" id="btnPrint">พิมพ์รายงาน</button>
+    </div>
+  </div>
+
+  <div id="sections"></div>
+
+  <footer class="note">แบบฟอร์มตรวจเช็กมาตรฐาน 5ส — บันทึกความคืบหน้าไว้ในเครื่องนี้เท่านั้น กด "ออกรายงานสรุป" เพื่อเก็บผลเป็นไฟล์รายงานสวยงามไว้ใช้ต่อหรือส่งให้ทีมงาน (เปิดไฟล์นั้นแล้วกด "โหลดรายงานเดิม" เพื่อกลับมาแก้ไขต่อได้)</footer>
+</div>
+
+<script>
+const SECTIONS = [
+  {no:1, title:"มาตรฐานกลางบอร์ด 5 ส. ประจำกลุ่ม/ฝ่าย", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_1", items:[
+    "มีผังคณะกรรมการ 5 ส. ของกลุ่มงานพร้อมรูปถ่าย มีข้อมูลการแบ่งพื้นที่รับผิดชอบ",
+    "มีข้อมูลมาตรฐานกลาง 5 ส. ที่กำหนดไว้สำหรับอ้างอิง",
+    "มีรูปภาพ ข้อมูล กิจกรรม ตามแผนปฏิบัติกิจกรรม 5 ส. ของหน่วยงานก่อนและหลังการประเมินล่าสุดที่เป็นปัจจุบัน",
+    "มีผลการดำเนินงานตามข้อเสนอแนะของคณะกรรมการตรวจประเมินที่ผ่านมา"
+  ]},
+  {no:2, title:"มาตรฐานกลางโต๊ะทำงาน", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_2_1", items:[
+    "บนโต๊ะทำงานจัดให้เป็นระเบียบ",
+    "มีลิ้นชักเก็บของใช้ส่วนตัว 1 ลิ้นชักพร้อมป้ายบ่งชี้",
+    "มีป้ายบ่งชี้ลิ้นชักในการเก็บอุปกรณ์สำนักงาน",
+    "ที่นั่งใต้โต๊ะมีการจัดวางกล่องใส่อุปกรณ์ทำงานได้ 1 กล่อง อยู่ในตำแหน่งเหมาะสมไม่กีดขวางและจัดวางรองเท้าเพิ่มเติมได้ไม่เกิน 1 คู่",
+    "โต๊ะ เก้าอี้ สะอาดเป็นระเบียบ",
+    "ใต้กระจกโต๊ะไม่มีรูปภาพ"
+  ]},
+  {no:3, title:"มาตรฐานกลางคอมพิวเตอร์ตั้งโต๊ะ", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_3_1", items:[
+    "คอมพิวเตอร์และอุปกรณ์ต่อพ่วงอยู่ในสภาพดีพร้อมใช้งานและมีฐานยึดที่มั่นคงแข็งแรง",
+    "ไม่มีอุปกรณ์ที่ไม่เกี่ยวข้องวางบริเวณเครื่องคอมพิวเตอร์และอุปกรณ์ต่อพ่วง",
+    "ไม่ติดกระดาษโน้ต สติกเกอร์หรือข้อความใดๆ บนโต๊ะคอมพิวเตอร์",
+    "จัดเก็บสายไฟเป็นระเบียบมีความปลอดภัย",
+    "ไม่มีกล่องหรืออุปกรณ์ใดๆ ปิดทับสายไฟ",
+    "ไม่วางโต๊ะคอมพิวเตอร์ในตำแหน่งที่มีความเสี่ยงสูง เช่น ใกล้น้ำมีความชื้นสูง ใกล้ความร้อนสูง",
+    "สะอาด ไม่มีฝุ่น คราบสกปรก"
+  ]},
+  {no:4, title:"มาตรฐานกลางตู้จัดเก็บเอกสาร", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_4_1", items:[
+    "มีการระบุชื่อตู้ และผู้รับผิดชอบ",
+    "จัดเก็บเอกสารอย่างเป็นระบบหรือจัดหมวดหมู่ให้ชัดเจน",
+    "จัดทำป้ายบ่งชี้แฟ้มเอกสาร/เอกสารทุกชิ้น",
+    "หลังตู้เก็บวัสดุและชั้นวางไม่วางของมากเกินความจำเป็น",
+    "มีความสะอาด เรียบร้อย"
+  ]},
+  {no:5, title:"มาตรฐานกลางตู้เก็บวัสดุและชั้นวางวัสดุ", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_5_1", items:[
+    "จัดวางตู้เก็บวัสดุและชั้นวางวัสดุไว้ในสถานที่สะดวกในการใช้",
+    "จัดเก็บวัสดุ/สิ่งของอย่างเป็นระบบหรือจัดหมวดหมู่ให้ชัดเจน",
+    "จัดทำป้ายแสดงวัสดุ/สิ่งของทุกชิ้น",
+    "หลังตู้เก็บวัสดุและชั้นวางไม่วางของมากเกินความจำเป็น",
+    "มีความสะอาด เรียบร้อย"
+  ]},
+  {no:6, title:"มาตรฐานกลางแฟ้มเอกสาร", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_6_1", items:[
+    "รูปแบบสันแฟ้มมีตราสัญลักษณ์ของสำนักงานป้องกันควบคุมโรคที่ 10 ชื่อหน่วยงาน กลุ่มงาน จัดทำแฟ้มเป็นหมวดหมู่",
+    "รูปแบบตัวหนังสือประเภทเดียวกันและขนาดเหมาะสม"
+  ]},
+  {no:7, title:"มาตรฐานกลางอุปกรณ์/เครื่องใช้สำนักงาน", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_7_1", items:[
+    "เก็บสายไฟ สายโทรศัพท์ และสายคอมพิวเตอร์อยู่ในสภาพเรียบร้อย",
+    "ทำความสะอาดเครื่องใช้สำนักงานให้สะอาดอยู่เสมอ"
+  ]},
+  {no:8, title:"มาตรฐานกลางแผงสวิตช์ไฟ", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_8_1", items:[
+    "มีแผนผังหรือแถบสัญลักษณ์หรือเครื่องหมายอื่นใดที่ระบุตำแหน่งของหลอดไฟในสำนักงานได้อย่างชัดเจน",
+    "สวิตช์อยู่ในสภาพพร้อมใช้งาน ไม่ชำรุด มีความปลอดภัย"
+  ]},
+  {no:9, title:"มาตรฐานเครื่องปรับอากาศ", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_9_1", items:[
+    "เครื่องปรับอากาศอยู่ในสภาพพร้อมใช้งาน มีการล้างทำความสะอาดทุกปี มีการทำความสะอาดหน้ากากกรอง 3 เดือนต่อครั้ง"
+  ]},
+  {no:10, title:"มาตรฐานกลางการดูแลถังดับเพลิง", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_10_1", items:[
+    "มีป้ายแสดงการตรวจสอบและพร้อมใช้งาน",
+    "ไม่มีสิ่งกีดขวางการเข้าถึงในระยะ 1.50 เมตร",
+    "มีป้ายแสดงขั้นตอนการใช้งาน และโทรศัพท์ฉุกเฉิน"
+  ]},
+  {no:11, title:"มาตรฐานห้องควบคุมระบบไฟฟ้า แอร์ และเครือข่าย", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_11_1", items:[
+    "มีแผนผังแสดงอุปกรณ์ต่างๆ และผู้รับผิดชอบงาน เบอร์ติดต่อ",
+    "ภายในห้องสะอาด เรียบร้อย ปลอดภัย ไม่มีวัสดุที่ไม่เกี่ยวข้องภายในห้อง"
+  ]},
+  {no:12, title:"มาตรฐานกลางตู้น้ำดื่ม", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_12_1", items:[
+    "มีป้ายบ่งชี้จุดให้บริการน้ำดื่ม ผู้รับผิดชอบ",
+    "ระบุกำหนดระยะเวลาในการล้าง เปลี่ยนไส้กรอง",
+    "มีผลการตรวจคุณภาพน้ำทุก 6 เดือน"
+  ]},
+  {no:13, title:"มุมกาแฟ/อาหารว่าง/อุปกรณ์งานบ้านงานครัว", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_13_1", items:[
+    "มีความเป็นสัดส่วน สะอาด เป็นระเบียบเรียบร้อย",
+    "แยกส่วนรับประทานอาหารออกจากห้องทำงาน",
+    "รักษาความสะอาดของอุปกรณ์งานครัว ไม่กองสุม เครื่องครัว แก้ว จาน",
+    "ไม่ปรุงอาหารในสำนักงาน"
+  ]},
+  {no:14, title:"มาตรฐานกลางห้องประชุม", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_14_1", items:[
+    "มีป้ายห้องประชุมติดตั้งไว้อย่างชัดเจน",
+    "อุปกรณ์ในห้องประชุมและอุปกรณ์สื่อโสตทัศนูปกรณ์ประจำห้องประชุมอยู่ในสภาพพร้อมใช้งานตลอดเวลา",
+    "อุปกรณ์ไฟฟ้าติดตั้งอย่างเป็นระเบียบปลอดภัย",
+    "มีนาฬิกาติดตั้งในตำแหน่งที่สามารถมองเห็นได้ชัดเจนและอยู่ในสภาพใช้งานได้",
+    "โต๊ะประชุมและเก้าอี้จัดให้เป็นระเบียบเรียบร้อย",
+    "เก้าอี้อยู่ในสภาพดี สะอาด พร้อมใช้งาน และจัดเก็บเก้าอี้หลังการประชุมทุกครั้ง",
+    "ไม่วางเอกสารที่ไม่จำเป็นไว้บนโต๊ะ"
+  ]},
+  {no:15, title:"มาตรฐานกลางการประหยัดพลังงาน", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_15_1", items:[
+    "มีกิจกรรมเกี่ยวกับการประหยัดพลังงาน เช่น ไฟฟ้า ประปา ลดกระดาษ แยกกระดาษ"
+  ]},
+  {no:16, title:"มาตรฐานกลางถังขยะ", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_16_1", items:[
+    "ถังขยะมีจำนวนเพียงพอ",
+    "มีการแยกขยะเป็น 3 ประเภทคือ ขยะ Recycle ขยะอันตราย ขยะทั่วไป (เศษอาหารให้ใส่ถุงพลาสติกทิ้งในถังขยะทั่วไป)"
+  ]},
+  {no:17, title:"มาตรฐานกลางห้องน้ำห้องส้วม", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_17_1", items:[
+    "มีป้ายระบุห้องสุขา ชายหญิง",
+    "มีป้ายระบุผู้รับผิดชอบ และตารางบันทึกทำความสะอาด มีผู้ตรวจความสะอาด",
+    "มีวัสดุจำเป็น เช่น กระดาษชำระ สบู่เหลว",
+    "มีถังขยะมีฝาปิดโดยใช้เท้าเหยียบ และถุงพลาสติกอยู่ภายในถัง",
+    "ห้องสุขามีความสะอาด เป็นระเบียบ ไม่มีกลิ่น ไม่ชำรุด"
+  ]},
+  {no:18, title:"มาตรฐานกลางพื้นที่โดยรอบอาคาร", link:"https://drive.google.com/drive/folders/YOUR_FOLDER_LINK_18_1", items:[
+    "พื้นที่โดยรอบอาคารสะอาดเป็นระเบียบ ไม่มีกองขยะ เศษหิน กิ่งไม้",
+    "พื้นที่โดยรอบอาคารสะอาดเป็นระเบียบ ทางเดินไม่มีหลุมบ่อ พื้นชำรุด ทรุด ที่อาจก่อให้เกิดอันตรายได้"
+  ]}
+];
+
+const STATUS_LABEL = {none:"ยังไม่ดำเนินการ", progress:"กำลังดำเนินการ", done:"ดำเนินการเรียบร้อย"};
+let state = {}; // id -> {status, note}
+let currentFilter = "all";
+
+function itemId(sno, i){ return sno + "." + (i+1); }
+
+function buildDom(){
+  const wrap = document.getElementById("sections");
+  wrap.innerHTML = "";
+  let totalItems = 0;
+  SECTIONS.forEach(sec=>{
+    totalItems += sec.items.length;
+    const det = document.createElement("details");
+    det.className = "section";
+    det.open = true;
+    det.dataset.sno = sec.no;
+
+    const summary = document.createElement("summary");
+    summary.className = "sec-head";
+    summary.innerHTML = `
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 6l6 6-6 6"/></svg>
+      <div class="sec-num">${sec.no}</div>
+      <div class="sec-title"></div>
+      <span class="sec-badge" id="badge-${sec.no}"></span>
+      ${sec.link ? `<a class="sec-link" href="${sec.link}" target="_blank" rel="noopener">รูป Before/After</a>` : ""}
+    `;
+    summary.querySelector(".sec-title").textContent = sec.title;
+    det.appendChild(summary);
+
+    const body = document.createElement("div");
+    body.className = "sec-body";
+
+    sec.items.forEach((text, i)=>{
+      const id = itemId(sec.no, i);
+      state[id] = state[id] || {status:"none", note:""};
+
+      const row = document.createElement("div");
+      row.className = "item-row";
+      row.dataset.id = id;
+      row.dataset.text = text;
+
+      const txt = document.createElement("div");
+      txt.className = "item-text";
+      const idxSpan = document.createElement("span");
+      idxSpan.className = "item-idx";
+      idxSpan.textContent = id;
+      txt.appendChild(idxSpan);
+      txt.appendChild(document.createTextNode(text));
+
+      const noteInput = document.createElement("input");
+      noteInput.type = "text";
+      noteInput.className = "note-input";
+      noteInput.placeholder = "หมายเหตุ (ถ้ามี)";
+      noteInput.value = state[id].note;
+      noteInput.addEventListener("input", e=>{
+        state[id].note = e.target.value;
+      });
+      txt.appendChild(noteInput);
+
+      const grp = document.createElement("div");
+      grp.className = "status-group";
+      ["none","progress","done"].forEach(s=>{
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "status-btn";
+        btn.dataset.s = s;
+        btn.textContent = STATUS_LABEL[s];
+        btn.addEventListener("click", ()=>{
+          state[id].status = s;
+          renderRowStatus(id);
+          renderSummary();
+          applyFilter();
+        });
+        grp.appendChild(btn);
+      });
+
+      row.appendChild(txt);
+      row.appendChild(grp);
+      body.appendChild(row);
+    });
+
+    det.appendChild(body);
+    wrap.appendChild(det);
+  });
+  document.getElementById("totalItemsBadge").textContent = totalItems + " รายการ";
+  renderAllRowStatus();
+  renderSummary();
+}
+
+function renderAllRowStatus(){
+  Object.keys(state).forEach(renderRowStatus);
+  SECTIONS.forEach(sec=>updateSectionBadge(sec.no));
+}
+
+function renderRowStatus(id){
+  const row = document.querySelector(`.item-row[data-id="${id}"]`);
+  if(!row) return;
+  const s = state[id].status;
+  row.querySelectorAll(".status-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.s === s);
+  });
+  const sno = id.split(".")[0];
+  updateSectionBadge(sno);
+}
+
+function updateSectionBadge(sno){
+  const sec = SECTIONS.find(s=>String(s.no)===String(sno));
+  if(!sec) return;
+  let done=0;
+  sec.items.forEach((_,i)=>{ if(state[itemId(sec.no,i)].status==="done") done++; });
+  const badge = document.getElementById("badge-"+sno);
+  if(!badge) return;
+  badge.textContent = `${done}/${sec.items.length} เสร็จ`;
+  badge.style.background = done===sec.items.length ? "var(--green-bg)" : "var(--gray-bg)";
+  badge.style.color = done===sec.items.length ? "var(--green)" : "var(--sub)";
+}
+
+function renderSummary(){
+  const all = Object.values(state);
+  const total = all.length;
+  const none = all.filter(x=>x.status==="none").length;
+  const progress = all.filter(x=>x.status==="progress").length;
+  const done = all.filter(x=>x.status==="done").length;
+  document.getElementById("cntTotal").textContent = total;
+  document.getElementById("cntNone").textContent = none;
+  document.getElementById("cntProg").textContent = progress;
+  document.getElementById("cntDone").textContent = done;
+  const pct = total ? Math.round((done/total)*100) : 0;
+  document.getElementById("percentDone").textContent = pct + "%";
+  document.getElementById("segDone").style.width = (total? (done/total*100):0) + "%";
+  document.getElementById("segProg").style.width = (total? (progress/total*100):0) + "%";
+}
+
+function applyFilter(){
+  const q = document.getElementById("searchBox").value.trim().toLowerCase();
+  document.querySelectorAll(".item-row").forEach(row=>{
+    const id = row.dataset.id;
+    const matchesStatus = currentFilter==="all" || state[id].status===currentFilter;
+    const matchesSearch = !q || row.dataset.text.toLowerCase().includes(q) || id.includes(q);
+    row.classList.toggle("hidden", !(matchesStatus && matchesSearch));
+  });
+  document.querySelectorAll("details.section").forEach(det=>{
+    const anyVisible = [...det.querySelectorAll(".item-row")].some(r=>!r.classList.contains("hidden"));
+    det.classList.toggle("hidden", !anyVisible);
+    if(anyVisible && (q || currentFilter!=="all")) det.open = true;
+  });
+}
+
+document.getElementById("filterBtns").addEventListener("click", e=>{
+  const btn = e.target.closest("button");
+  if(!btn) return;
+  currentFilter = btn.dataset.f;
+  document.querySelectorAll("#filterBtns button").forEach(b=>b.classList.toggle("active", b===btn));
+  applyFilter();
+});
+document.getElementById("searchBox").addEventListener("input", applyFilter);
+document.getElementById("btnExpandAll").addEventListener("click", ()=>{
+  document.querySelectorAll("details.section").forEach(d=>d.open=true);
+});
+document.getElementById("btnCollapseAll").addEventListener("click", ()=>{
+  document.querySelectorAll("details.section").forEach(d=>d.open=false);
+});
+document.getElementById("btnPrint").addEventListener("click", ()=>window.print());
+
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function buildPayload(){
+  return {
+    exportedAt: new Date().toISOString(),
+    state
+  };
+}
+
+const STATUS_PILL = {
+  none:   {label:"ยังไม่ดำเนินการ",   bg:"#f1f5f9", fg:"#64748b"},
+  progress:{label:"กำลังดำเนินการ",   bg:"#fef3c7", fg:"#b45309"},
+  done:   {label:"ดำเนินการเรียบร้อย", bg:"#d1fae5", fg:"#047857"}
+};
+
+function buildReportHtml(payload){
+  const all = Object.values(payload.state);
+  const total = all.length;
+  const doneN = all.filter(x=>x.status==="done").length;
+  const progN = all.filter(x=>x.status==="progress").length;
+  const noneN = all.filter(x=>x.status==="none").length;
+  const pct = total ? Math.round((doneN/total)*100) : 0;
+  const genDate = new Date(payload.exportedAt);
+  const genDateStr = genDate.toLocaleDateString('th-TH', {year:'numeric', month:'long', day:'numeric'});
+
+  const rows = SECTIONS.map(sec=>{
+    const secDone = sec.items.filter((_,i)=>payload.state[itemId(sec.no,i)]?.status==="done").length;
+    const itemsHtml = sec.items.map((text,i)=>{
+      const id = itemId(sec.no,i);
+      const st = payload.state[id] || {status:"none", note:""};
+      const pill = STATUS_PILL[st.status] || STATUS_PILL.none;
+      return `
+        <tr>
+          <td class="c-idx">${id}</td>
+          <td class="c-desc">${esc(text)}</td>
+          <td class="c-status"><span class="pill" style="background:${pill.bg};color:${pill.fg}">${pill.label}</span></td>
+          <td class="c-note">${esc(st.note||"")}</td>
+        </tr>`;
+    }).join("");
+    return `
+      <section class="sec-block">
+        <h3>${sec.no}. ${esc(sec.title)} <span class="sec-count">${secDone}/${sec.items.length} เสร็จ</span></h3>
+        <table>
+          <thead><tr><th style="width:52px;">ข้อ</th><th>รายการตรวจเช็ก</th><th style="width:150px;">สถานะ</th><th style="width:180px;">หมายเหตุ</th></tr></thead>
+          <tbody>${itemsHtml}</tbody>
+        </table>
+      </section>`;
+  }).join("");
+
+  return `<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>รายงานตรวจเช็กมาตรฐาน 5ส</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{font-family:'Noto Sans Thai','Sarabun',sans-serif;background:#f4f6f9;color:#1e293b;margin:0;padding:28px 16px 60px;}
+  .wrap{max-width:900px;margin:0 auto;}
+  .report-header{background:linear-gradient(135deg,#0f766e 0%,#134e4a 100%);color:#fff;border-radius:16px;padding:26px 28px;margin-bottom:18px;}
+  .report-header h1{margin:0 0 6px;font-size:21px;font-weight:800;}
+  .report-header .meta-line{font-size:13px;opacity:.9;margin-top:10px;display:flex;gap:18px;flex-wrap:wrap;}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;margin-bottom:18px;box-shadow:0 1px 2px rgba(15,23,42,.04);}
+  .summary-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+  .summary-row h2{margin:0;font-size:15px;}
+  .percent{font-size:26px;font-weight:800;color:#0f766e;}
+  .bar{height:12px;border-radius:999px;background:#f1f5f9;overflow:hidden;display:flex;margin-bottom:14px;}
+  .bar span{height:100%;}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;}
+  .stat{border-radius:10px;padding:9px 12px;font-size:12.5px;font-weight:700;display:flex;justify-content:space-between;}
+  .stat .n{font-size:17px;}
+  .stat.total{background:#eef2ff;color:#3730a3;}
+  .stat.none{background:#f1f5f9;color:#64748b;}
+  .stat.prog{background:#fef3c7;color:#b45309;}
+  .stat.done{background:#d1fae5;color:#047857;}
+  .sec-block{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 2px rgba(15,23,42,.04);break-inside:avoid;}
+  .sec-block h3{margin:0 0 10px;font-size:14.5px;display:flex;align-items:center;gap:10px;}
+  .sec-count{font-size:11.5px;font-weight:700;background:#f1f5f9;color:#64748b;padding:3px 9px;border-radius:999px;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{text-align:left;color:#64748b;font-weight:700;font-size:11.5px;padding:6px 8px;border-bottom:2px solid #e2e8f0;}
+  td{padding:8px;border-bottom:1px solid #f1f5f9;vertical-align:top;}
+  .c-idx{font-weight:700;color:#0f766e;white-space:nowrap;}
+  .pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap;}
+  .c-note{color:#64748b;}
+  .footer-note{text-align:center;color:#94a3b8;font-size:11.5px;margin-top:20px;}
+  .reload-hint{background:#fffbeb;border:1px dashed #f59e0b;color:#92400e;font-size:12px;border-radius:10px;padding:10px 14px;margin-bottom:18px;}
+  @media print{
+    body{background:#fff;padding:0;}
+    .reload-hint{display:none;}
+    .sec-block,.card{box-shadow:none;}
+  }
+</style></head>
+<body>
+<div class="wrap">
+  <div class="report-header">
+    <h1>รายงานผลตรวจเช็กมาตรฐาน 5ส (5S Checklist)</h1>
+    <div class="meta-line">
+      <span>ออกรายงานเมื่อ ${genDateStr}</span>
+    </div>
+  </div>
+  <div class="reload-hint">ไฟล์นี้เป็นทั้งรายงานสรุปและไฟล์บันทึกความคืบหน้า — เปิดแบบฟอร์มตรวจเช็กแล้วกด "โหลดรายงานเดิม (Import)" เลือกไฟล์นี้ เพื่อกลับมาแก้ไขต่อได้ทันที</div>
+  <div class="card">
+    <div class="summary-row"><h2>ความคืบหน้าโดยรวม</h2><div class="percent">${pct}%</div></div>
+    <div class="bar"><span style="width:${total?doneN/total*100:0}%;background:#059669;"></span><span style="width:${total?progN/total*100:0}%;background:#d97706;"></span></div>
+    <div class="stat-row">
+      <div class="stat total"><span>ทั้งหมด</span><span class="n">${total}</span></div>
+      <div class="stat none"><span>ยังไม่ดำเนินการ</span><span class="n">${noneN}</span></div>
+      <div class="stat prog"><span>กำลังดำเนินการ</span><span class="n">${progN}</span></div>
+      <div class="stat done"><span>ดำเนินการเรียบร้อย</span><span class="n">${doneN}</span></div>
+    </div>
+  </div>
+  ${rows}
+  <div class="footer-note">ออกรายงานเมื่อ ${genDateStr} · แบบฟอร์มตรวจเช็กมาตรฐาน 5ส</div>
+</div>
+<script type="application/json" id="__checklist_state__">${JSON.stringify(payload)}<\/script>
+</body></html>`;
+}
+
+document.getElementById("btnExport").addEventListener("click", ()=>{
+  const payload = buildPayload();
+  const html = buildReportHtml(payload);
+  const blob = new Blob([html], {type:"text/html"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const stamp = payload.exportedAt.slice(0,10);
+  a.href = url;
+  a.download = `5s-checklist-report-${stamp}.html`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+function applyImportedPayload(payload){
+  if(payload.state){
+    Object.keys(payload.state).forEach(id=>{
+      if(state[id]){
+        state[id].status = payload.state[id].status || "none";
+        state[id].note = payload.state[id].note || "";
+      }
+    });
+    buildDom();
+  }
+}
+
+document.getElementById("importFile").addEventListener("change", e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = evt=>{
+    const text = evt.target.result;
+    try{
+      applyImportedPayload(JSON.parse(text));
+      return;
+    }catch(err){ /* not raw JSON, try extracting from HTML report */ }
+    try{
+      const m = text.match(/<script type="application\/json" id="__checklist_state__">([\s\S]*?)<\/script>/);
+      if(m){
+        applyImportedPayload(JSON.parse(m[1]));
+      }else{
+        throw new Error("no embedded data");
+      }
+    }catch(err){
+      alert("ไม่สามารถอ่านไฟล์นี้ได้ กรุณาเลือกไฟล์รายงานที่ออกจากแบบฟอร์มนี้ (ปุ่ม \"ออกรายงานสรุป\")");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+buildDom();
+</script>
+</body>
+</html>
